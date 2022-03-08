@@ -22,6 +22,28 @@ g stands for generate. This command generates module "module-name" and automatic
 Controllers are annotated with @Controller, and services with @Injectable, both from @nestjs/common package. Then, they need to be added in module.ts file, inside @Module decorator.
 Inside controller, we pass service as constructor parameter. Inside controller decorator we pass route, that needs to be combined with routes from @Post decorators over methods inside controller.
 
+## Database
+
+We are going to use Prisma, ORM for Node.js and TypeScript. Installing it with commands:
+npm install prisma --save-dev
+npm install @prisma/client
+Initialising prisma with command:
+npx prisma init
+This command creates new file ".env", that contains DB connection string, root folder named "prisma" with schema file that will contain database model. Prisma uses first ".env" file that founds, so that file could be moved into prisma folder.
+Nullable fields are declared with "?" after type definition. (field String?).
+
+## Prisma
+
+npx prisma migrate dev
+This command is used for development environmetn, deletes existing data and creates tables from schema definition file, also adds sql files with neccessary commands inside prisma/migrations folder. It also automaticaly executes "npm prisma generate" which makes module fields TypeScript fields, that can be imediately accessible from TypeScript files, for example import into services.
+npx prisma studio - runs light, web based, DB management studio.
+
+## Connecting code to DB
+
+nest g module prisma
+nest g service prisma --no-spec
+This creates new module, and service without test specifications, that is going to be used for connecting modules with database.
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
