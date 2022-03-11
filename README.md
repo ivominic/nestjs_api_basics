@@ -43,6 +43,9 @@ npx prisma studio - runs light, web based, DB management studio.
 nest g module prisma
 nest g service prisma --no-spec
 This creates new module, and service without test specifications, that is going to be used for connecting modules with database.
+Prisma service needs to extend PrismaClient and in constructor has to call super() passing parameters for database connection.
+Each module that needs access to Prisma, needs to have imports: [PrismaModule] inside @Module decorator, that way gets access to providers inside Prisma module. In PrismaModule, @Module decorator, needs to have exports: [PrismaService] in order to use PrismaService from other modules. This process can be shortened by adding @Global() decorator over PrismaModule. That way, Prisma will bi accessible from all modules, without need to import it in every new module. Exporting PrismaService still needs to be done.
+Global module must be imported into app.module, for this to work.
 
 ## Description
 
