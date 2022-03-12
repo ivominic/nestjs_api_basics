@@ -47,6 +47,15 @@ Prisma service needs to extend PrismaClient and in constructor has to call super
 Each module that needs access to Prisma, needs to have imports: [PrismaModule] inside @Module decorator, that way gets access to providers inside Prisma module. In PrismaModule, @Module decorator, needs to have exports: [PrismaService] in order to use PrismaService from other modules. This process can be shortened by adding @Global() decorator over PrismaModule. That way, Prisma will bi accessible from all modules, without need to import it in every new module. Exporting PrismaService still needs to be done.
 Global module must be imported into app.module, for this to work.
 
+## DTO
+
+Practice should be to create index.ts file in each dto subfolder. That way importing wil be done from './dto' and there will be no need to import from each separate dto.ts file.
+
+## Pipes and validators
+
+npm i class-validator class-transformer
+This command install packages needed to transform and validate data.
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
