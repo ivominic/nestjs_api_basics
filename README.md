@@ -31,12 +31,21 @@ Initialising prisma with command:
 npx prisma init
 This command creates new file ".env", that contains DB connection string, root folder named "prisma" with schema file that will contain database model. Prisma uses first ".env" file that founds, so that file could be moved into prisma folder.
 Nullable fields are declared with "?" after type definition. (field String?).
+There is dbo connection string inside prisma.service.ts file, but I had to create .env file inside prisma folder to create datatables from migrations, running "npx prisma migrate dev". Filed .env are in gitignore file, so they have to be manualy created on each computer.
 
 ## Prisma
 
 npx prisma migrate dev
-This command is used for development environmetn, deletes existing data and creates tables from schema definition file, also adds sql files with neccessary commands inside prisma/migrations folder. It also automaticaly executes "npm prisma generate" which makes module fields TypeScript fields, that can be imediately accessible from TypeScript files, for example import into services.
+This command is used for development environmetn, deletes existing data and creates tables from schema definition file, also adds sql files with neccessary commands inside prisma/migrations folder. It also automaticaly executes "npx prisma generate" which makes module fields TypeScript fields, that can be imediately accessible from TypeScript files, for example import into services.
 npx prisma studio - runs light, web based, DB management studio.
+
+## Update database model
+
+Adding @unique decorator on user.email property, and mapped classes to table names (to be in lowercase). This is done in shema.prisma file.
+userId Int
+user User @relation(fields: [userId], references: [id])
+This two commands create relation one to many - one user has many bookmarks. Matching record needs to be created in User class. It didn't create automaticaly for me, and I needed to run command "npx prisma format" for that correction.
+After completing model changes, need to run command "npx prisma migrate dev".
 
 ## Connecting code to DB
 
@@ -53,12 +62,20 @@ Practice should be to create index.ts file in each dto subfolder. That way impor
 
 ## Pipes and validators
 
-npm i class-validator class-transformer
-This command install packages needed to transform and validate data.
+This command install packages needed to transform and validate data. Setting decorators to auth.dto.ts, and needs to add in main.ts statement to use validators globaly app.useGlobalPipes(new ValidationPipe()); If ValidationPipe() has parameter whitelist: true, that means that we will receive only defined parameters (in DTO) and all other, passed from request, will be striped.
 
-## Description
+## Hashing
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+npm i argon2
+Argon is package used for hashing, in our case, password and refresh token. We import that in auth.service.ts file.
+
+## Insert and return
+
+Inserting is done in signup method of auth.service.ts file. Prisma allows us to return only fields we wish, declaring them in select object, as written in signup method. This is better to do with transformers, for instance: delete user.hash before returning user.
+
+## Try catch
+
+To pass message that unique constraint has been violated, we pass message from catch block of auth.service method.
 
 ## Installation
 
@@ -91,17 +108,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
