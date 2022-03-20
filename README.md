@@ -77,6 +77,11 @@ Inserting is done in signup method of auth.service.ts file. Prisma allows us to 
 
 To pass message that unique constraint has been violated, we pass message from catch block of auth.service method.
 
+## Scripts in package.json
+
+Created three scripts for working with docker database, db:dev:rm, db:dev:up and db:dev:restart.
+Also, created scripts for applying migrations to database - "prisma:dev:deploy": "prisma migrate deploy". Sleep 1 means to wait 1 second before applying prisma migrations.
+
 ## Installation
 
 ```bash
