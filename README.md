@@ -97,6 +97,8 @@ Also needs to install types for passport-jwt
 npm i --save-dev @types/passport-jwt
 Jwt module will be imported inside auth.module.ts without secret, for purposes regarding refresh token, and will be customized inside auth.services.ts. JwtModule will be accessible only from auth.module, but service will bi injected into auth.services.
 Method for generating token is going to be created in auth.services. Secret is going to be stored in .env file, because it shouldn be visible on git. signToken returns access_token, and next step should be to verify that passed token is valid.
+Strategy is module that checks token validity. We create folder with same name inside auth folder. After creating strategy, it needs to be imported in auth.module as provider. Instead of JWT strategy, Google or Facebook can be used.
+Next, creating new route to protect it with strategy. It is going to be created using cli: nest g controller user --no-spec
 
 ## Installation
 
