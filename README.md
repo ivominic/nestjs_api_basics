@@ -82,6 +82,22 @@ To pass message that unique constraint has been violated, we pass message from c
 Created three scripts for working with docker database, db:dev:rm, db:dev:up and db:dev:restart.
 Also, created scripts for applying migrations to database - "prisma:dev:deploy": "prisma migrate deploy". Sleep 1 means to wait 1 second before applying prisma migrations.
 
+## Config module
+
+Built in module. Installs: npm i @nestjs/config
+It is going to be used to read configuration string from .env file and be accessible through entire application. Config module can be implemented on root module (app.module.ts) or can be placed in dedicated file. Under the hood ConfigModule uses .env library. Config can be used as service, in any method decorated with @Injectable(). We are using it in prisma.service.ts to read db connection string. To make it accessible from every module in app.module.ts needs to be addes property isGlobal: true;
+
+## Authentication
+
+Passport.js is going to be used for authentication. We need to install few packages:
+npm i --save @nestjs/passport passport
+Also need to install jwt specific modules, using:
+npm i --save @nestjs/jwt passport-jwt
+Also needs to install types for passport-jwt
+npm i --save-dev @types/passport-jwt
+Jwt module will be imported inside auth.module.ts without secret, for purposes regarding refresh token, and will be customized inside auth.services.ts. JwtModule will be accessible only from auth.module, but service will bi injected into auth.services.
+Method for generating token is going to be created in auth.services. Secret is going to be stored in .env file, because it shouldn be visible on git. signToken returns access_token, and next step should be to verify that passed token is valid.
+
 ## Installation
 
 ```bash
