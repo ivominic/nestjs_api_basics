@@ -100,6 +100,25 @@ Method for generating token is going to be created in auth.services. Secret is g
 Strategy is module that checks token validity. We create folder with same name inside auth folder. After creating strategy, it needs to be imported in auth.module as provider. Instead of JWT strategy, Google or Facebook can be used.
 Next, creating new route to protect it with strategy. It is going to be created using cli: nest g controller user --no-spec
 
+## Guards
+
+Guards are set by a decorators (@UseGuards()) and prevent accessing route with incorrect credentials. @nestjs/passport has built in AuthGuard, and we specify which guard are going to use: 'jwt'. Jwt.strategy can have guard strategy, that is optional, but in this case, it is going to be 'jwt', although it can be anything. This 'jwt' string is showing that that route is protected by that strategy. Every request to protected url has to have access token in authorization header.
+Jwt.strategy has to have validation function in order for this to work. Value that validate function returns, payload in this case, is going to be appended to request, more precisely to user object from request (req.user).
+Since we are going to read user directly from database, aside from config, we need to pass prisma to constructor of jwt.strategy, as private property. Reason for not declaring config as private is because it is not used out of constructor (super()).
+If validate() function returns null, it is going to throw 401 unauthorized error.
+Whenever we put string somewhere, it can create error, so we are going to create guard folder and export files inside auth folder, and import JwtGuard class in user.controller. The same way we can make folder decorator and make decorators that will replace @Req above getMe method, creating custom param decorator in file get-user.decrator.ts. Content of this file is copied from official nestjs documentation, reguarding custom decorators, specificaly to get user object from request. getMe request user is of type User, that is returned from PrismaClient, since User class is defined in prisma schema.
+Guards decorators can be defined on method or controller level, in which case it validates calls for all methods in controller.
+getMe method can return any property, if decorator set like for email example: getMe(@GetUser() user: User, @GetUser('email') email: string) {. Now, we have access to email property, returned from get-user.decorator.
+
+## Decorators
+
+Post method return 201 status code. HttpDecorator can be used to send status 200 status code with: @HttpCode(HttpStatus.OK) or @HttpCode(200).
+
+## Testing
+
+There are: unit testing, integration testing and end to end testing (e2e). Unit testing simulates function calls. Integration testing can use, for instance, three modules: auth, prisma and configuration. Then it can test only theirs functionalities. Integration testing allows you to define some segments of app and test them together. E2e testing usualy test high level of app usage.For example, user signs in app, requests his profile, changes something etc.
+Tests should be conducted over test database.
+
 ## Installation
 
 ```bash
