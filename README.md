@@ -43,7 +43,7 @@ npx prisma studio - runs light, web based, DB management studio.
 
 Adding @unique decorator on user.email property, and mapped classes to table names (to be in lowercase). This is done in shema.prisma file.
 userId Int
-user User @relation(fields: [userId], references: [id])
+user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 This two commands create relation one to many - one user has many bookmarks. Matching record needs to be created in User class. It didn't create automaticaly for me, and I needed to run command "npx prisma format" for that correction.
 After completing model changes, need to run command "npx prisma migrate dev".
 
@@ -117,7 +117,13 @@ Post method return 201 status code. HttpDecorator can be used to send status 200
 ## Testing
 
 There are: unit testing, integration testing and end to end testing (e2e). Unit testing simulates function calls. Integration testing can use, for instance, three modules: auth, prisma and configuration. Then it can test only theirs functionalities. Integration testing allows you to define some segments of app and test them together. E2e testing usualy test high level of app usage.For example, user signs in app, requests his profile, changes something etc.
-Tests should be conducted over test database.
+Tests should be conducted over test database. By default nestjs uses supertest package for testing, but in this example, we are going to use pactumjs. Install command: npm i --save-dev pactum.
+We are going to delete everything from test/app.e2e-spec.ts file.
+Test running script: npm run test:e2e. Testing didn't pass as expected. It is going to be added later.
+
+## User service
+
+nest g service user --no-spec
 
 ## Installation
 
